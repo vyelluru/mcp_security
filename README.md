@@ -23,6 +23,7 @@ mcpsec-demo/
     bad/server.js   # insecure demo server
 ```
 ##Quickstart
+```text
 git clone <your-repo-url>
 cd mcpsec-demo
 
@@ -31,3 +32,4 @@ python -m client.scan --cmd "node servers/good/server.js" --out results_good.jso
 
 # Insecure server (most checks should fail by design)
 python -m client.scan --cmd "node servers/bad/server.js"  --out results_bad.json
+```
