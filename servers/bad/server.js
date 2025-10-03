@@ -1,27 +1,46 @@
 #!/usr/bin/env node
-const readline = require('readline');
+// Bad server: no auth, no nonce checks; very permissive (for negative tests).
+const readline = require("readline");
 const rl = readline.createInterface({ input: process.stdin, crlfDelay: Infinity });
 
-function write(resultOrError, id) {
+function reply(id, payload, isError = false) {
   const msg = { jsonrpc: "2.0", id };
-  if (resultOrError && resultOrError.error) msg.error = resultOrError.error;
-  else msg.result = resultOrError;
+  if (isError) msg.error = payload;
+  else msg.result = payload;
   process.stdout.write(JSON.stringify(msg) + "\n");
 }
+function err(id, code, message) { reply(id, { code, message }, true); }
 
-rl.on('line', (line) => {
+rl.on("line", (line) => {
   let req; try { req = JSON.parse(line); } catch { return; }
   const { id, method, params = {} } = req;
 
-  if (method === 'initialize') return write({ server: "bad-mcp", version: "0.1" }, id);
-  if (method === 'listTools') return write([{ name: "echo", schema: {} }], id);
-  if (method === 'logout') return write({ ok: true }, id);
+  if (method === "initialize") return reply(id, { server: "bad-mcp", version: "0.1" });
 
-  if (method === 'callTool') {
-    // No auth, no nonce, always succeeds
-    if (params.name === "echo") return write({ ok: true, echo: params.args }, id);
-    return write({ error: { code: 404, message: "unknown tool" } }, id);
+  if (method === "listTools") {
+    return reply(id, [
+      { name: "echo", schema: {} },
+      { name: "writeThing", schema: {} },
+    ]);
   }
 
-  write({ error: { code: -32601, message: "method not found" } }, id);
+  if (method === "login") {
+    // Pretend login always "works"
+    return reply(id, { token: "ANY", scope: "all", aud: "any", iss: "bad-mcp" });
+  }
+
+  if (method === "logout") {
+    // Does nothing (no revocation)
+    return reply(id, { ok: true });
+  }
+
+  if (method === "callTool") {
+    const { name, args = {} } = params;
+    // No auth, no nonce, no scope/aud/iss/expired checks
+    if (name === "echo") return reply(id, { ok: true, echo: args });
+    if (name === "writeThing") return reply(id, { ok: true, wrote: args.value ?? null });
+    return err(id, 404, "unknown tool");
+  }
+
+  return err(id, -32601, "method not found");
 });

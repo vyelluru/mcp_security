@@ -10,6 +10,7 @@ class McpClient:
     def close(self):
         self.io.kill()
 
+
     # ---- Core MCP-ish calls (names are placeholders; match your servers) ----
     def initialize(self) -> dict:
         return self.rpc.request("initialize", {"client":"mcpsec-demo","version":"0.1"})
@@ -20,6 +21,14 @@ class McpClient:
     def call_tool(self, name: str, args: dict, meta: dict | None = None) -> dict:
         # meta can carry Authorization, nonce, audience, etc.
         return self.rpc.request("callTool", {"name": name, "args": args, "meta": meta or {}})
+
+    # add to McpClient
+    def login(self, scope: str = "read") -> dict:
+        # good server returns token/scopes; bad server returns dummy too
+        return self.rpc.request("login", {"scope": scope})
+
+    def logout(self, token: str) -> dict:
+        return self.rpc.request("logout", {"meta": {"Authorization": f"Bearer {token}"}})
 
     # convenience: one-shot call with header hooks
     def authed_call(self, token: str, name: str, args: dict, nonce: str | None = None, **extras):
