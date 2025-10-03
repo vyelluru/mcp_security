@@ -21,7 +21,8 @@ mcpsec-demo/
   servers/
     good/server.js  # secure demo server
     bad/server.js   # insecure demo server
-Quickstart
+```
+##Quickstart
 git clone <your-repo-url>
 cd mcpsec-demo
 
