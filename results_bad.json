@@ -1,0 +1,37 @@
+[
+  {
+    "name": "ok_call",
+    "pass": true,
+    "detail": {
+      "ok": true,
+      "echo": {
+        "msg": "ok"
+      }
+    }
+  },
+  {
+    "name": "expired_token_denied",
+    "pass": false,
+    "detail": null
+  },
+  {
+    "name": "aud_mismatch_denied",
+    "pass": false,
+    "detail": null
+  },
+  {
+    "name": "scope_mismatch_denied",
+    "pass": false,
+    "detail": null
+  },
+  {
+    "name": "replay_denied",
+    "pass": false,
+    "detail": null
+  },
+  {
+    "name": "reuse_after_logout_denied",
+    "pass": false,
+    "detail": null
+  }
+]
