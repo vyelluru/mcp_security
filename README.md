@@ -18,16 +18,6 @@ Features
 
 ✅ CLI summary + results.json; non-zero exit on failures (CI-ready)
 
-Repo layout
-mcpsec-demo/
-  client/
-    rpc.py          # JSON-per-line over stdio
-    mcp_client.py   # initialize, list_tools, call_tool, login/logout
-    scan.py         # runner + report
-  servers/
-    good/server.js  # secure demo server
-    bad/server.js   # insecure demo server
-
 Quick start
 
 Prereqs: Python 3.10+, Node 18+
