@@ -22,7 +22,7 @@ mcpsec-demo/
     good/server.js  # secure demo server
     bad/server.js   # insecure demo server
 ```
-##Quickstart
+## Quickstart
 ```text
 git clone <your-repo-url>
 cd mcpsec-demo
